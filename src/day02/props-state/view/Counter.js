@@ -17,23 +17,42 @@ export default class Counter extends Component {
         }
         this.onIncrease = this.onIncrease.bind(this);
         this.onDecrease = this.onDecrease.bind(this);
+        this.updateCount = this.updateCount.bind(this);
 
+        console.log("constructor" + this.props.counterName);
     }
+
 
     onIncrease() {
-        this.setState({
-            value: this.state.value + 10
-        })
+        // this.setState({
+        //     value: this.state.value + 10
+        // });
+        this.updateCount(true);
     }
 
 
+    updateCount(isIncrement) {
+        var preValue = this.state.value;
+        var newValue = isIncrement ? preValue + 10 : preValue - 10;
+        this.setState({value: newValue});
+        this.props.onUpdate(newValue, preValue);
+    }
 
     onDecrease() {
-        this.setState(() => {
-            var num = this.state.value - 10;
+        // this.setState(() => {
+        //     var num = this.state.value - 10;
+        //
+        //     return {value: num < 0 ? 0 : num}
+        // });
+        this.updateCount(false);
+    }
 
-            return {value: num < 0 ? 0 : num}
-        })
+    componentWillMount() {
+        console.log("componentWillMount" + this.props.counterName);
+    }
+
+    componentWillUpdate() {
+        console.log("componentWillUpdate" + this.props.counterName);
     }
 
     render() {
@@ -46,16 +65,38 @@ export default class Counter extends Component {
         );
     }
 
+    componentDidMount() {
+        console.log("componentDidMount" + this.props.counterName);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        console.log("componentWillReceiveProps" + nextProps.counterName);
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        console.log("shouldComponentUpdate" + nextProps.counterName);
+        return true;
+    }
+
+    componentDidUpdate() {
+        console.log("componentDidUpdate" + this.props.counterName);
+    }
+
+    componentWillUnmount() {
+        console.log("componentWillUnmount" + this.props.counterName);
+    }
+
 
 }
 
 Counter.propTypes = {
     initValue: PropTypes.number,
-    counterName: PropTypes.string.isRequired
+    counterName: PropTypes.string.isRequired,
+    onUpdate: PropTypes.func.isRequired
 };
 
 Counter.defaultProps = {
-    initValue:20
+    initValue: 20
 };
 
 const buttonStyle = {
